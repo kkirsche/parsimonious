@@ -74,7 +74,8 @@ class Node(object):
         # TODO: If a Node appears multiple times in the tree, we'll point to
         # them all. Whoops.
         def indent(text):
-            return '\n'.join(('    ' + line) for line in text.splitlines())
+            return '\n'.join(f'    {line}' for line in text.splitlines())
+
         ret = [u'<%s%s matching "%s">%s' % (
             self.__class__.__name__,
             (' called "%s"' % self.expr_name) if self.expr_name else '',
@@ -90,14 +91,17 @@ class Node(object):
 
     def __eq__(self, other):
         """Support by-value deep comparison with other nodes for testing."""
-        if not isinstance(other, Node):
-            return NotImplemented
-
-        return (self.expr == other.expr and
-                self.full_text == other.full_text and
-                self.start == other.start and
-                self.end == other.end and
-                self.children == other.children)
+        return (
+            (
+                self.expr == other.expr
+                and self.full_text == other.full_text
+                and self.start == other.start
+                and self.end == other.end
+                and self.children == other.children
+            )
+            if isinstance(other, Node)
+            else NotImplemented
+        )
 
     def __ne__(self, other):
         return not self == other
@@ -205,7 +209,7 @@ class NodeVisitor(object, metaclass=RuleDecoratorMeta):
         methods.
 
         """
-        method = getattr(self, 'visit_' + node.expr_name, self.generic_visit)
+        method = getattr(self, f'visit_{node.expr_name}', self.generic_visit)
 
         # Call that method, and show where in the tree it failed if it blows
         # up.
@@ -236,8 +240,9 @@ class NodeVisitor(object, metaclass=RuleDecoratorMeta):
         for now.
 
         """
-        raise NotImplementedError('No visitor method was defined for this expression: %s' %
-                                  node.expr.as_rule())
+        raise NotImplementedError(
+            f'No visitor method was defined for this expression: {node.expr.as_rule()}'
+        )
 
     # Convenience methods:
 

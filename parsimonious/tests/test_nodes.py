@@ -69,13 +69,14 @@ class SimpleTests(TestCase):
         boogie = 'böogie'
         n = Node(Literal(boogie), s, 0, 3, children=[
                 Node(Literal(' '), s, 3, 4), Node(Literal('ö'), s, 4, 5)])
-        self.assertEqual(repr(n),
-            str("""s = {hai_o}\nNode({boogie}, s, 0, 3, children=[Node({space}, s, 3, 4), Node({o}, s, 4, 5)])""").format(
+        self.assertEqual(
+            repr(n),
+            """s = {hai_o}\nNode({boogie}, s, 0, 3, children=[Node({space}, s, 3, 4), Node({o}, s, 4, 5)])""".format(
                 hai_o=repr(s),
                 boogie=repr(Literal(boogie)),
                 space=repr(Literal(" ")),
                 o=repr(Literal("ö")),
-            )
+            ),
         )
 
     def test_parse_shortcut(self):
@@ -126,7 +127,6 @@ class DecoratorTests(TestCase):
                 superclass's grammar with a new one."""
 
         raise SkipTest("I haven't got around to making this work yet.")
-        self.assertEqual(OverridingFormatter().parse('((hi))'), '<b>HI</b>')
 
 
 class PrimalScream(Exception):
@@ -150,7 +150,7 @@ class SpecialCasesTests(TestCase):
         self.assertTrue(node != 5)
         self.assertTrue(node != None)
         self.assertTrue(node != Node(Literal('23456'), 'o hai', 0, 5))
-        self.assertTrue(not (node != Node(Literal('12345'), 'o hai', 0, 5)))
+        self.assertTrue(node == Node(Literal('12345'), 'o hai', 0, 5))
 
 
     def test_generic_visit_NotImplementedError_unnamed_node(self):

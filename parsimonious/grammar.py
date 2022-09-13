@@ -292,7 +292,7 @@ class LazyReference(str):
 
     # Just for debugging:
     def _as_rhs(self):
-        return '<LazyReference to %s>' % self
+        return f'<LazyReference to {self}>'
 
 
 class RuleVisitor(NodeVisitor):

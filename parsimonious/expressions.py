@@ -17,7 +17,7 @@ from parsimonious.utils import StrAndRepr
 
 def is_callable(value):
     criteria = [isfunction, ismethod, ismethoddescriptor]
-    return any([criterion(value) for criterion in criteria])
+    return any(criterion(value) for criterion in criteria)
 
 
 def expression(callable, rule_name, grammar):
@@ -212,9 +212,7 @@ class Expression(StrAndRepr):
         return node
 
     def __str__(self):
-        return '<%s %s>' % (
-            self.__class__.__name__,
-            self.as_rule())
+        return f'<{self.__class__.__name__} {self.as_rule()}>'
 
     def as_rule(self):
         """Return the left- and right-hand sides of a rule that represents me.
@@ -226,7 +224,7 @@ class Expression(StrAndRepr):
         if rhs.startswith('(') and rhs.endswith(')'):
             rhs = rhs[1:-1]
 
-        return ('%s = %s' % (self.name, rhs)) if self.name else rhs
+        return f'{self.name} = {rhs}' if self.name else rhs
 
     def _unicode_members(self):
         """Return an iterable of my unicode-represented children, stopping
@@ -402,7 +400,7 @@ class Lookahead(Compound):
             return Node(self, text, pos, pos)
 
     def _as_rhs(self):
-        return '%s%s' % ('!' if self.negativity else '&', self._unicode_members()[0])
+        return f"{'!' if self.negativity else '&'}{self._unicode_members()[0]}"
 
     def _eq_check_cycles(self, other, checked):
         return (
@@ -454,7 +452,7 @@ class Quantifier(Compound):
             qualifier = '{,%d}' % self.max
         else:
             qualifier = '{%d,%d}' % (self.min, self.max)
-        return '%s%s' % (self._unicode_members()[0], qualifier)
+        return f'{self._unicode_members()[0]}{qualifier}'
 
     def _eq_check_cycles(self, other, checked):
         return (

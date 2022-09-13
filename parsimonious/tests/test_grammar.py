@@ -45,13 +45,34 @@ class BootstrappingGrammarTests(TestCase):
     def test_regex(self):
         text = '~"[a-zA-Z_][a-zA-Z_0-9]*"LI'
         regex = rule_grammar['regex']
-        self.assertEqual(rule_grammar['regex'].parse(text),
-            Node(regex, text, 0, len(text), children=[
-                 Node(Literal('~'), text, 0, 1),
-                 Node(rule_grammar['spaceless_literal'], text, 1, 25, children=[
-                     Node(rule_grammar['spaceless_literal'].members[0], text, 1, 25)]),
-                 Node(regex.members[2], text, 25, 27),
-                 Node(rule_grammar['_'], text, 27, 27)]))
+        self.assertEqual(
+            regex.parse(text),
+            Node(
+                regex,
+                text,
+                0,
+                len(text),
+                children=[
+                    Node(Literal('~'), text, 0, 1),
+                    Node(
+                        rule_grammar['spaceless_literal'],
+                        text,
+                        1,
+                        25,
+                        children=[
+                            Node(
+                                rule_grammar['spaceless_literal'].members[0],
+                                text,
+                                1,
+                                25,
+                            )
+                        ],
+                    ),
+                    Node(regex.members[2], text, 25, 27),
+                    Node(rule_grammar['_'], text, 27, 27),
+                ],
+            ),
+        )
 
     def test_successes(self):
         """Make sure the PEG recognition grammar succeeds on various inputs."""
@@ -494,15 +515,11 @@ class GrammarTests(TestCase):
 
     def test_rule_ordering_is_preserved(self):
         grammar = Grammar('\n'.join('r%s = "something"' % i for i in range(100)))
-        self.assertEqual(
-            list(grammar.keys()),
-            ['r%s' % i for i in range(100)])
+        self.assertEqual(list(grammar.keys()), [f'r{i}' for i in range(100)])
 
     def test_rule_ordering_is_preserved_on_shallow_copies(self):
         grammar = Grammar('\n'.join('r%s = "something"' % i for i in range(100)))._copy()
-        self.assertEqual(
-            list(grammar.keys()),
-            ['r%s' % i for i in range(100)])
+        self.assertEqual(list(grammar.keys()), [f'r{i}' for i in range(100)])
 
     def test_repetitions(self):
         grammar = Grammar(r'''

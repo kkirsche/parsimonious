@@ -47,7 +47,7 @@ class ParseError(StrAndRepr, Exception):
 
 class LeftRecursionError(ParseError):
     def __str__(self):
-        rule_name = self.expr.name if self.expr.name else str(self.expr)
+        rule_name = self.expr.name or str(self.expr)
         window = self.text[self.pos:self.pos + 20]
         return dedent(f"""
             Left recursion in rule {rule_name!r} at {window!r} (line {self.line()}, column {self.column()}).

@@ -13,7 +13,7 @@ class TestBenchmarks(unittest.TestCase):
         dict_time = timeit('item = d[9000]', 'd = {x: 0 for x in range(10000)}')
 
         # Dicts take about 1.6x as long as lists in Python 2.6 and 2.7.
-        self.assertTrue(list_time < dict_time, '%s < %s' % (list_time, dict_time))
+        self.assertTrue(list_time < dict_time, f'{list_time} < {dict_time}')
 
 
     def test_call_vs_inline(self):
@@ -25,7 +25,7 @@ class TestBenchmarks(unittest.TestCase):
 
         # Calling a function is pretty fast; it takes just 1.2x as long as the
         # global var access and addition in l[0] += 1.
-        self.assertTrue(no_call < call, '%s (no call) < %s (call)' % (no_call, call))
+        self.assertTrue(no_call < call, f'{no_call} (no call) < {call} (call)')
 
 
     def test_startswith_vs_regex(self):
@@ -39,5 +39,7 @@ class TestBenchmarks(unittest.TestCase):
                                  "t = 'this is the finest hello ever'")
 
         # Regexes take 2.24x as long as simple string matching.
-        self.assertTrue(startswith_time < re_time,
-            '%s (startswith) < %s (re)' % (startswith_time, re_time))
+        self.assertTrue(
+            startswith_time < re_time,
+            f'{startswith_time} (startswith) < {re_time} (re)',
+        )
